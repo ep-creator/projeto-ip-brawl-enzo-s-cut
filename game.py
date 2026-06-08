@@ -21,10 +21,10 @@ class Game:
         self.fps = 60
         self.running = True
         
-        # Instancia o Player 1 bem no centro da tela
-        self.player1 = Player1(largura // 100 , altura // 2, size = 15)
+        # Instancia o Player 1 do lado esquerdo
+        self.player1 = Player1(32, altura // 2, size = 32)
         # Instancia o Player 2 bem no lado da tela
-        self.player2 = Player2(largura // 1.01, altura // 2, size = 15)
+        self.player2 = Player2(largura - 64, altura // 2, size = 32)
         # Instancia o item
         self.cube = Itens(largura // 2, altura // 2)
 

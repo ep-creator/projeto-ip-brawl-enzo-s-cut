@@ -1,4 +1,4 @@
-resolucao = (720, 540)
+resolucao = (1056, 672)
 
-largura = 730
-altura = 540
+largura = 1056
+altura = 672
