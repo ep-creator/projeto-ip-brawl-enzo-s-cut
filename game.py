@@ -1,7 +1,7 @@
 import pygame
 import sys
 from players import Player1, Player2
-from itens import Itens
+from itens import Item
 from settings import resolucao, largura, altura
 from mapa import Mapa
 
@@ -9,8 +9,6 @@ class Game:
     def __init__(self):
         pygame.init()
         
-
-
         # Configurações da Janela
         self.screen = pygame.display.set_mode(resolucao)
         pygame.display.set_caption("Meu Jogo Quadrado")

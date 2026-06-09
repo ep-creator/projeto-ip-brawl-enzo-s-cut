@@ -29,7 +29,7 @@
 </data>
  </layer>
  <imagelayer id="2" name="mapa">
-  <image source="../../../Downloads/Map (10).png" width="791" height="500"/>
+  <image source="Map (10).png" width="791" height="500"/>
  </imagelayer>
  <objectgroup id="6" name="ground">
   <object id="60" x="0" y="0" width="790.667" height="497.333"/>
