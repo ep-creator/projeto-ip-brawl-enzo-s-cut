@@ -1,7 +1,7 @@
 import pygame
 import sys
 from players import Player1, Player2
-from itens import Itens, Projectile
+from itens import Itens, Projectile, Item
 from settings import resolucao, largura, altura
 from mapa import Mapa
 
@@ -28,6 +28,8 @@ class Game:
         self.mapa = Mapa("assets/mapa_brawl.tmx")
 
         self.bullets = []
+
+        self.itens = [Item(350, 350, "life"), Item(396, 251, "damage"), Item(442, 102, "speed")]
 
 
     def handle_events(self):
@@ -93,6 +95,16 @@ class Game:
                     bala_ativa = False
                     #AQUI É PRA TIRAR A VIDA QUANDO ADD OS HEALTH POINTS. 
 
+        # Colisão jogador - itens
+        for item in self.itens[:]: #[:] faz a iteração com a lista de itens funcionar, sem esse comando a remoção de itens no mapa fica uma confusão
+            if self.player1.rect.colliderect(item.rect):
+                self.itens.remove(item)
+                # AQUI É PRA DAR O POWER UP QUANDO ADD OS POWER UPS.
+            
+            elif self.player2.rect.colliderect(item.rect):
+                self.itens.remove(item)
+                # AQUI É PRA DAR O POWER UP QUANDO ADD OS POWER UPS.
+
 
     def draw(self):
         """Limpa a tela e desenha os objetos atualizados"""
@@ -106,6 +118,9 @@ class Game:
         
         for bala in self.bullets:
             bala.draw(self.screen)
+
+        for item in self.itens:
+            item.draw(self.screen)
         
         # Atualiza a tela de fato
         pygame.display.flip()

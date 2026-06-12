@@ -43,7 +43,7 @@ class Projectile():
    
        
 
-class Item:
+class Item():
     def __init__(self, x, y, item_type):
         self.rect = pygame.Rect(x, y, 20, 20)
         self.type = item_type  # "life", "damage", "speed"
