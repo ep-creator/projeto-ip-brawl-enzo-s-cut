@@ -1,5 +1,6 @@
 import pygame
 import math  #precisa pra poder calcular pra onde a bala vai 
+
 class Itens:
     def __init__(self, x, y, radius=5, color=(255, 0, 0)):
         self.posicao = (x, y)

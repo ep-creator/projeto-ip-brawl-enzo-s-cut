@@ -4,6 +4,7 @@ from players import Player1, Player2
 from itens import Itens, Projectile, Item
 from settings import resolucao, largura, altura
 from mapa import Mapa
+import random
 
 class Game:
     def __init__(self):
@@ -29,8 +30,11 @@ class Game:
 
         self.bullets = []
 
-        self.itens = [Item(350, 350, "life"), Item(396, 251, "damage"), Item(442, 102, "speed")]
-
+        # Gerar posições aleatórias para os itens
+        xl, yl = self.posicion()
+        xd, yd = self.posicion()
+        xs, ys = self.posicion()
+        self.itens = [Item(xl, yl, "life"), Item(xd, yd, "damage"), Item(xs, ys, "speed")]
 
     def handle_events(self):
         """Trata eventos do sistema (como fechar a janela)"""
@@ -99,11 +103,11 @@ class Game:
         for item in self.itens[:]: #[:] faz a iteração com a lista de itens funcionar, sem esse comando a remoção de itens no mapa fica uma confusão
             if self.player1.rect.colliderect(item.rect):
                 self.itens.remove(item)
-                # AQUI É PRA DAR O POWER UP QUANDO ADD OS POWER UPS.
+                # AQUI É PRA DAR O POWER UP QUANDO ADD OS POWER UPS E ADICIONAR O CONTADOR DOS ITENS COLETADOS
             
             elif self.player2.rect.colliderect(item.rect):
                 self.itens.remove(item)
-                # AQUI É PRA DAR O POWER UP QUANDO ADD OS POWER UPS.
+                # AQUI É PRA DAR O POWER UP QUANDO ADD OS POWER UPS E ADICIONAR O CONTADOR DOS ITENS COLETADOS
 
 
     def draw(self):
@@ -132,6 +136,25 @@ class Game:
             self.update()
             self.draw()
             self.clock.tick(self.fps)  # Mantém o jogo a 60 FPS
-            
         pygame.quit()
         sys.exit()
+
+    def posicion(self):
+        while True:
+            x = random.randint(0, largura - 20)
+            y = random.randint(0, altura - 20)
+            nova_posicao = pygame.Rect(x, y, 20, 20)
+
+            colisao = False
+            for parede in self.mapa.walls:
+                if nova_posicao.colliderect(parede):
+                    colisao = True
+            for agua in self.mapa.waters:
+                if nova_posicao.colliderect(agua):
+                    colisao = True
+            for mato in self.mapa.bushes:
+                if nova_posicao.colliderect(mato):
+                    colisao = True
+            
+            if not colisao:
+                return x, y
