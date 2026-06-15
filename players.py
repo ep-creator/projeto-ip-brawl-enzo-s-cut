@@ -6,7 +6,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 class Player:
     def __init__(self, x, y, image, controls):
         
-        def carregar_frame(nome_arquivo, prop1=40, prop2=80):
+        def carregar_frame(nome_arquivo, prop1=30, prop2=60):
             caminho = os.path.join(BASE_DIR, "assets/shelly", nome_arquivo)
             img = pygame.image.load(caminho).convert_alpha()
             return pygame.transform.scale(img, (prop1, prop2))
@@ -15,13 +15,13 @@ class Player:
         self.walkright = [carregar_frame('R1.png'), carregar_frame('R2.png')]
         self.walkup = [carregar_frame('U1.png'), carregar_frame('U2.png')]
         self.walkdown = [carregar_frame('B1.png'), carregar_frame('B2.png')]
-        self.standing = carregar_frame('shelly.png', 80, 76)
+        self.standing = carregar_frame('shelly.png', 65, 60)
 
         self.rect = self.standing.get_rect()
         self.rect.topleft = (x, y)
         self.hitbox = self.rect.inflate(-53, -20)
 
-        self.speed = 5
+        self.speed = 3
         self.controls = controls
         self.hidden = False
 
