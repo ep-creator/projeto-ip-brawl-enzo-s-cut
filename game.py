@@ -8,21 +8,20 @@ from mapa import Mapa
 class Game:
     def __init__(self):
         pygame.init()
-
+        
+        # Configurações da Janela
         self.screen = pygame.display.set_mode(resolucao)
         pygame.display.set_caption("Meu Jogo Quadrado")
 
         self.clock = pygame.time.Clock()
-        self.fps = 60
+        self.fps = 30
         self.running = True
-
-        #Instancia o Player 1 no lado esquerdo e Player 2 no lado direito
-        self.player1 = Player1(3, 238)
-        self.player2 = Player2(765, 238)
-
-        #Instancia o item central
-        self.cube = Itens(largura // 2, altura // 2)
-
+        
+        # Instancia o Player 1 do lado esquerdo
+        self.player1 = Player1(-23, 200)
+        # Instancia o Player 2 bem no lado da tela
+        self.player2 = Player2(745, 200)
+        
         self.mapa = Mapa("assets/mapa_brawl.tmx")
 
         self.bullets = []
@@ -64,7 +63,6 @@ class Game:
         # Bala vermelha acerta Player 1
         if bala.color == (255, 50, 50) and bala.rect.colliderect(self.player1.rect):
             morreu = self.player1.damage() # se morre retorna true
-            print(f"P1 tomou! Vida restante: {self.player1.vida}")
             if morreu:
                 self.player1.respawn()
                 self.player2.respawn()
@@ -74,7 +72,6 @@ class Game:
         # Bala azul acerta Player 2
         if bala.color == (0, 150, 255) and bala.rect.colliderect(self.player2.rect):
             morreu = self.player2.damage() #se morre retorna true
-            print(f"P2 tomou! Vida restante: {self.player2.vida}")
             if morreu:
                 self.player1.respawn()
                 self.player2.respawn()
@@ -89,9 +86,12 @@ class Game:
         self.player2.move(self.mapa)
 
         # Opcional: Impede o jogador de sair das bordas da tela
-        self.player1.rect.clamp_ip(self.screen.get_rect())
-        self.player2.rect.clamp_ip(self.screen.get_rect())
+        self.player1.hitbox.clamp_ip(self.screen.get_rect())
+        self.player2.hitbox.clamp_ip(self.screen.get_rect())
 
+        # Alinha a imagem e a hitbox
+        self.player1.rect.center = self.player1.hitbox.center
+        self.player2.rect.center = self.player2.hitbox.center
         for bala in self.bullets[:]: #[:] faz a iteração com a lista de balas funcionar, sem esse comando a remoção de balas no mapa fica uma confusão
             bala.move()
 
@@ -106,8 +106,6 @@ class Game:
         self.screen.fill((30, 30, 30))  # Fundo grafite escuro
 
         self.mapa.draw(self.screen)
-        # Desenha o cube
-        self.cube.draw(self.screen)
         # Desenha o jogador
         self.player1.draw(self.screen)
         self.player2.draw(self.screen)
