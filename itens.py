@@ -1,59 +1,59 @@
 import pygame
-import math  #precisa pra poder calcular pra onde a bala vai 
-class Itens:
-    def __init__(self, x, y, radius=5, color=(255, 0, 0)):
-        self.posicao = (x, y)
-        self.radius = radius
-        self.color = color
-        
-    def draw(self, surface):
-        """Desenha o circulo na tela"""
-        pygame.draw.circle(surface, center=self.posicao, radius = self.radius, color=self.color)
+import math 
 
 class Projectile():
-    def __init__(self,x , y, target_x, target_y, radius = 6, color= (0,0,0), vel = 10):
+    # Adicionado parâmetro 'damage' para computar o boost do jogador
+    def __init__(self, x, y, target_x, target_y, radius=6, color=(0,0,0), vel=10, damage=1):
         self.x = x
         self.y = y
         self.radius = radius 
         self.color = color
+        self.damage = damage # Guarda o dano que essa bala específica causará
         
         dx = target_x - x
         dy = target_y - y
 
-        distancia = math.hypot(dx, dy) #calcula a distancia por meio da hipotenusa, usa a biblioteca "math"
+        distancia = math.hypot(dx, dy)
 
-        self.rect = pygame.Rect(self.x - self.radius, self.y - self.radius, self.radius *2, self.radius *2)
-        #cria uma hitbox em volta da bala pra fazer a colisão
+        self.rect = pygame.Rect(self.x - self.radius, self.y - self.radius, self.radius * 2, self.radius * 2)
         if distancia == 0:
-            distancia = 1 #evita a divisao por zero se eles estiverem um em cima do outro  
+            distancia = 1   
         
         self.vel_x = (dx / distancia) * vel
-        self.vel_y = (dy / distancia) * vel #define a vel da bala 
+        self.vel_y = (dy / distancia) * vel 
 
     def move(self):
         self.x += self.vel_x
-        self.y += self.vel_y #move a bala 
+        self.y += self.vel_y 
 
         self.rect.centerx = int(self.x)
-        self.rect.centery = int(self.y) # faz a hitbox da bala andar
+        self.rect.centery = int(self.y) 
 
-    def draw(self, window):#desenho da bala 
+    def draw(self, window):
         pygame.draw.circle(window, self.color, (int(self.x), int(self.y)), self.radius)
-
-   
-       
 
 class Item:
     def __init__(self, x, y, item_type):
-        self.rect = pygame.Rect(x, y, 20, 20)
+        # Tamanho 25x25 para ficar bem visível no mapa
+        self.rect = pygame.Rect(x, y, 25, 25)
         self.type = item_type  # "life", "damage", "speed"
 
         if item_type == "life":
-            self.color = (0, 255, 0)
+            self.color = (0, 255, 100)    # Verde claro / Vida
         elif item_type == "damage":
-            self.color = (255, 0, 0)
+            self.color = (255, 128, 0)    # Laranja / Força
         elif item_type == "speed":
-            self.color = (0, 0, 255)
+            self.color = (0, 191, 255)    # Azul Ciano / Velocidade
 
     def draw(self, surface):
+        # Desenha o quadrado preenchido
         pygame.draw.rect(surface, self.color, self.rect)
+        # Desenha uma borda preta fina para dar contraste
+        pygame.draw.rect(surface, (0, 0, 0), self.rect, 2)
+        
+        # Desenha um detalhe interno para identificar visualmente o item
+        font = pygame.font.SysFont(None, 22, bold=True)
+        simbolo = "H" if self.type == "life" else ("D" if self.type == "damage" else "S")
+        texto = font.render(simbolo, True, (255, 255, 255))
+        pos_texto = texto.get_rect(center=self.rect.center)
+        surface.blit(texto, pos_texto)

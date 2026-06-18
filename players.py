@@ -21,7 +21,10 @@ class Player:
         self.rect.topleft = (x, y)
         self.hitbox = self.rect.inflate(-53, -20)
 
-        self.speed = 3
+        self.speed_base = 2
+        self.speed_boost = 0  
+        self.damage_boost = 0 
+        
         self.controls = controls
         self.hidden = False
 
@@ -37,19 +40,18 @@ class Player:
         self.vida = self.vida_max
 
     def move(self, mapa):
-
         old_x = self.hitbox.x
         old_y = self.hitbox.y
 
         keys = pygame.key.get_pressed()
+        velocidade_atual = self.speed_base + self.speed_boost
 
-        # Movimentação horizontal 
         if keys[self.controls["left"]]:
-            self.hitbox.x -= self.speed
+            self.hitbox.x -= velocidade_atual
             self.left = True
             self.right = False
         elif keys[self.controls["right"]]:
-            self.hitbox.x += self.speed
+            self.hitbox.x += velocidade_atual
             self.right = True
             self.left = False
         else:
@@ -57,24 +59,23 @@ class Player:
             self.right = False
 
         colisao_x = False
-        for wall in mapa.walls: # testa colisão com paredes
+        for wall in mapa.walls:
             if self.hitbox.colliderect(wall):
                 colisao_x = True
                
-        for water in mapa.waters: # testa colisão
+        for water in mapa.waters:
             if self.hitbox.colliderect(water):
                 colisao_x = True
 
         if colisao_x:
             self.hitbox.x = old_x
 
-        # Movimentação Vertical
         if keys[self.controls["up"]]:
-            self.hitbox.y -= self.speed
+            self.hitbox.y -= velocidade_atual
             self.up = True
             self.down = False
         elif keys[self.controls["down"]]:
-            self.hitbox.y += self.speed
+            self.hitbox.y += velocidade_atual
             self.down = True
             self.up = False
         else:
@@ -88,12 +89,10 @@ class Player:
         for water in mapa.waters:
             if self.hitbox.colliderect(water):
                 colisao_y = True
-                
 
         if colisao_y:
             self.hitbox.y = old_y
 
-        # arbusto (esconder)
         self.hidden = False
         area_player = self.hitbox.width * self.hitbox.height
 
@@ -104,12 +103,10 @@ class Player:
 
                 if area_no_arbusto >= (area_player/2):
                     self.hidden = True
-                   
 
         self.rect.center = self.hitbox.center
 
     def draw(self, surface):
-
         if self.walkcount + 1 > 30:
             self.walkcount = 0
 
@@ -137,36 +134,64 @@ class Player:
 
     def draw_hud(self, surface, label_x, label_y):
         font = pygame.font.SysFont(None, 20)
+        font_stats = pygame.font.SysFont(None, 16)
+        
         label = font.render(f"P{self.player_num}", True, self.color)
-        surface.blit(label, (label_x, label_y))
- 
         heart_size = 12
         gap = 4
-        for i in range(self.vida_max):
-            x = label_x + 28 + i * (heart_size + gap)
-            if i < self.vida:
-                pygame.draw.rect(surface, self.color, (x, label_y, heart_size, heart_size))
-            else:
-                pygame.draw.rect(surface, (80, 80, 80), (x, label_y, heart_size, heart_size))
+        
+        total_quadrados = max(self.vida_max, self.vida)
 
-    def damage(self):
-        self.vida -= 1
+        if self.player_num == 1:
+            surface.blit(label, (label_x, label_y))
+            for i in range(total_quadrados):
+                x = label_x + 28 + i * (heart_size + gap)
+                if i < self.vida:
+                    cor_vida = (0, 255, 0) if i >= self.vida_max else self.color
+                else:
+                    cor_vida = (80, 80, 80)
+                pygame.draw.rect(surface, cor_vida, (x, label_y, heart_size, heart_size))
+
+            texto_stats = f"Dmg: +{self.damage_boost}  Spd: +{self.speed_boost}"
+            label_stats = font_stats.render(texto_stats, True, (255, 255, 255))
+            surface.blit(label_stats, (label_x, label_y + 16))
+
+        elif self.player_num == 2:
+            surface.blit(label, (label_x + 110, label_y))
+            for i in range(total_quadrados):
+                x = label_x + 90 - i * (heart_size + gap)
+                if i < self.vida:
+                    cor_vida = (0, 255, 0) if i >= self.vida_max else self.color
+                else:
+                    cor_vida = (80, 80, 80)
+                pygame.draw.rect(surface, cor_vida, (x, label_y, heart_size, heart_size))
+
+            texto_stats = f"Dmg: +{self.damage_boost}  Spd: +{self.speed_boost}"
+            label_stats = font_stats.render(texto_stats, True, (255, 255, 255))
+            largura_stats = label_stats.get_width()
+            surface.blit(label_stats, (label_x + 130 - largura_stats, label_y + 16))
+
+    def damage(self, qtd_dano=1):
+        self.vida -= qtd_dano
         if self.vida <= 0:
-            return True  # se a vida acabar retorna true
+            return True  
         return False
 
     def respawn(self):
         self.vida = self.vida_max
+        self.speed_boost = 0   
+        self.damage_boost = 0  
         self.rect.topleft = (self.spawn_x, self.spawn_y)
         self.hitbox = self.rect.inflate(-53, -20)
 
 class Player1(Player):
-    def __init__(self, x, y):     # cor              # controles
+    def __init__(self, x, y):
         super().__init__(x, y, 'shelly.png', {"left": pygame.K_a, "right": pygame.K_d, "up": pygame.K_w, "down": pygame.K_s})
         self.color = (0, 0, 255)
         self.player_num = 1
+
 class Player2(Player):
-    def __init__(self, x, y):     # cor              # controles
+    def __init__(self, x, y):
         super().__init__(x, y, 'shelly.png',{ "left": pygame.K_LEFT, "right": pygame.K_RIGHT, "up": pygame.K_UP, "down": pygame.K_DOWN})
         self.color = (255, 0, 0)
         self.player_num = 2
