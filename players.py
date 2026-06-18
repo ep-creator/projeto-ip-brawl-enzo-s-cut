@@ -152,7 +152,7 @@ class Player:
                     cor_vida = (80, 80, 80)
                 pygame.draw.rect(surface, cor_vida, (x, label_y, heart_size, heart_size))
 
-            texto_stats = f"Dano: +{self.damage_boost}  Veloc.: +{self.speed_boost}"
+            texto_stats = f"Dmg: +{self.damage_boost}  Spd: +{self.speed_boost}"
             label_stats = font_stats.render(texto_stats, True, (255, 255, 255))
             surface.blit(label_stats, (label_x, label_y + 16))
 
@@ -166,7 +166,7 @@ class Player:
                     cor_vida = (80, 80, 80)
                 pygame.draw.rect(surface, cor_vida, (x, label_y, heart_size, heart_size))
 
-            texto_stats = f"Dano: +{self.damage_boost}  Veloc.: +{self.speed_boost}"
+            texto_stats = f"Dmg: +{self.damage_boost}  Spd: +{self.speed_boost}"
             label_stats = font_stats.render(texto_stats, True, (255, 255, 255))
             largura_stats = label_stats.get_width()
             surface.blit(label_stats, (label_x + 130 - largura_stats, label_y + 16))

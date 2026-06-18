@@ -53,7 +53,7 @@ class Item:
         
         # Desenha um detalhe interno para identificar visualmente o item
         font = pygame.font.SysFont(None, 22, bold=True)
-        simbolo = "S" if self.type == "life" else ("D" if self.type == "damage" else "V")
+        simbolo = "H" if self.type == "life" else ("D" if self.type == "damage" else "S")
         texto = font.render(simbolo, True, (255, 255, 255))
         pos_texto = texto.get_rect(center=self.rect.center)
         surface.blit(texto, pos_texto)
