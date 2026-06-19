@@ -82,6 +82,8 @@ class Game:
                 self.running = False
 
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.running = False
                 # Caso o jogo completo tenha acabado (Melhor de 3)
                 if self.game_over:
                     if event.key == pygame.K_r:
