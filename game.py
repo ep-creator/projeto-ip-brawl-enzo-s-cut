@@ -7,9 +7,11 @@ from settings import resolucao, largura, altura
 from mapa import Mapa
 
 class Game:
-    def __init__(self, tela):
-
-        self.screen = tela
+    def __init__(self,screen):
+        pygame.init()
+        
+        self.screen = screen
+        pygame.display.set_caption("Meu Jogo Quadrado")
 
         self.clock = pygame.time.Clock()
         self.fps = 30
@@ -30,6 +32,12 @@ class Game:
         self.round_over = False       # Novo: Controla se a rodada atual terminou
         self.winner_text = ""
         self.round_winner_text = ""   # Novo: Guarda o texto do vencedor da rodada
+
+        self.balas_p1 = 4
+        self.balas_p2 = 4
+        self.recarga_p1 = 0
+        self.recarga_p2 = 0
+        self.tempo_recarga = 3000
         
         self.spawn_inicial_itens()
 
@@ -74,8 +82,6 @@ class Game:
                 self.running = False
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.running = False
                 # Caso o jogo completo tenha acabado (Melhor de 3)
                 if self.game_over:
                     if event.key == pygame.K_r:
@@ -94,7 +100,7 @@ class Game:
                 
                 # Jogo rolando normalmente
                 else:
-                    if event.key == pygame.K_SPACE:
+                    if event.key == pygame.K_SPACE and self.balas_p1 > 0:
                         nova_bala = Projectile(
                             x=self.player1.rect.centerx,
                             y=self.player1.rect.centery,
@@ -104,8 +110,11 @@ class Game:
                             damage=1 + self.player1.damage_boost
                         )
                         self.bullets.append(nova_bala)
+                        self.balas_p1 -= 1
+                        if self.balas_p1 == 0:
+                            self.recarga_p1 = pygame.time.get_ticks() # Tempo para iniciar a recarga do Player 1
 
-                    if event.key == pygame.K_RETURN:
+                    if event.key == pygame.K_RETURN and self.balas_p2 > 0:
                         nova_bala = Projectile(
                             x=self.player2.rect.centerx,
                             y=self.player2.rect.centery,
@@ -115,6 +124,9 @@ class Game:
                             damage=1 + self.player2.damage_boost
                         )
                         self.bullets.append(nova_bala)
+                        self.balas_p2 -= 1
+                        if self.balas_p2 == 0:
+                            self.recarga_p2 = pygame.time.get_ticks() # Tempo para iniciar a recarga do Player 2
 
     def checar_bala(self, bala):
         if bala.x < 0 or bala.x > largura or bala.y < 0 or bala.y > altura:
@@ -156,6 +168,10 @@ class Game:
         self.player2.respawn()
         self.bullets.clear()
         self.spawn_inicial_itens() 
+        self.balas_p1 = 4
+        self.balas_p2 = 4
+        self.recarga_p1 = 0
+        self.recarga_p2 = 0
 
     def aplicar_coleta(self, player, item):
         if item.type == "life":
@@ -171,6 +187,15 @@ class Game:
     def update(self):
         # Trava os updates se a rodada ou o jogo tiverem acabado
         if not self.game_over and not self.round_over:
+
+            atual_time = pygame.time.get_ticks()
+            if self.balas_p1 == 0 and atual_time - self.recarga_p1 >= self.tempo_recarga:
+                self.balas_p1 = 4
+                self.recarga_p1 = 0
+            if self.balas_p2 == 0 and atual_time - self.recarga_p2 >= self.tempo_recarga:
+                self.balas_p2 = 4
+                self.recarga_p2 = 0
+
             self.player1.move(self.mapa)
             self.player2.move(self.mapa)
 
