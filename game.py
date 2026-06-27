@@ -18,8 +18,8 @@ class Game:
         self.fps = 30
         self.running = True
         
-        self.player1 = Player1(-23, 200)
-        self.player2 = Player2(745, 200)
+        self.player1 = Player1(-1, 205)
+        self.player2 = Player2(760, 205)
         
         self.mapa = Mapa("assets/mapa_brawl.tmx")
 

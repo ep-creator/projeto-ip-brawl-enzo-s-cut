@@ -15,7 +15,7 @@ class Player:
         self.walkright = [carregar_frame('R1.png'), carregar_frame('R2.png')]
         self.walkup = [carregar_frame('U1.png'), carregar_frame('U2.png')]
         self.walkdown = [carregar_frame('B1.png'), carregar_frame('B2.png')]
-        self.standing = carregar_frame('shelly.png', 65, 60)
+        self.standing = carregar_frame('shelly.png')
 
         self.rect = self.standing.get_rect()
         self.rect.topleft = (x, y)
