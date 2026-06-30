@@ -1,7 +1,7 @@
 import pygame
 from game import Game
 from settings import resolucao
-from telainicial import mostrar_tela_inicial
+from tela_inicial import mostrar_tela_inicial
 from tela_selecao import escolher_personagens
 
 def main():
