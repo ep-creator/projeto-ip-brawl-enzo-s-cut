@@ -9,7 +9,7 @@ class Player:
 
     def __init__(self, x, y, image, controls):
 
-        def carregar_frame(nome_arquivo, prop1=30, prop2=60):
+        def carregar_frame(nome_arquivo, prop1=40, prop2=60):
             caminho = os.path.join(BASE_DIR, "assets", self.asset_pasta, nome_arquivo)
             img = pygame.image.load(caminho).convert_alpha()
             return pygame.transform.scale(img, (prop1, prop2))

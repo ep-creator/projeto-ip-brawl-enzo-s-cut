@@ -39,7 +39,7 @@ class Projectile():
 class Item:
     def __init__(self, x, y, item_type):
         # Tamanho estruturado para a colisão do item no mapa 
-        self.rect = pygame.Rect(x, y, 25, 25)
+        self.rect = pygame.Rect(x, y, 32, 32)
         self.type = item_type  # "life", "damage", "speed"
 
         if item_type == "life":

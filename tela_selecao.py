@@ -29,7 +29,7 @@ def escolher_personagens(tela):
 
         caminho = os.path.join(BASE_DIR, "assets", dados["asset_pasta"], dados["standing_file"])
         img = pygame.image.load(caminho).convert_alpha()
-        previews[chave] = pygame.transform.scale(img, (64, 64))
+        previews[chave] = pygame.transform.scale(img, (64, 96))
 
     idx_p1 = 0
     idx_p2 = min(1, len(info_personagens) - 1)
