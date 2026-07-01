@@ -206,7 +206,7 @@ class Game:
     def aplicar_coleta(self, player, item):
 
         if item.type == "life":
-            if player.vida < 7:
+            if player.vida < 10:
                 player.vida += 1
 
         elif item.type == "damage":
