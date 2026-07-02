@@ -12,11 +12,10 @@ DAMAGE_BOOST_MAXIMO = 2
 # Tamanho dos frames de sprite do jogador (largura, altura em pixels)
 TAMANHO_FRAME_JOGADOR = (40, 60)
 
-HITBOX_MAPA_AJUSTE_LARGURA = -53   # reduz a largura em relação ao rect do sprite
-HITBOX_MAPA_ALTURA = 20            # altura fixa da hitbox de mapa (só a base do sprite)
+# --- HITBOXES (duas, para efeito de profundidade "down-top") ---
+HITBOX_ENTIDADE_AJUSTE = (-53, -30)  # (dx, dy) aplicado com Rect.inflate()
 
-# HITBOX DE ENTIDADES: usada para colisão com balas, outro player e itens.
-HITBOX_ENTIDADE_AJUSTE = (-53, -30)  # ajuste (dx, dy) aplicado ao rect do sprite inteiro
+HITBOX_MAPA_ALTURA = 20  # altura fixa da faixa de colisão com o mapa
 
 # --- MUNIÇÃO ---
 BALAS_MAXIMAS = 4
